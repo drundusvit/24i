@@ -3,12 +3,13 @@ jobs:
   include:
     - stage: build docker image
       script:
-      - echo TRAVIS_COMMIT
-      - echo env.TRAVIS_COMMIT
-      - echo ${TRAVIS_COMMIT}
-      # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      #- docker build -t TRAVIS_COMMIT .
-      #- docker images
-    # - stage: test
-    #   script: docker run -p 8081:8081 $TRAVIS_COMMIT
-    #   script: curl localhost:8081
+      - echo ${TRAVIS_COMMIT[0..7]}
+      - echo ${TRAVIS_BRANCH}
+      #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT[0..7]} .
+      - docker images
+    - stage: test
+      script: docker run -p 8081:8081 $TRAVIS_COMMIT
+      script: ./first_test.sh
+      script: ./second_test.sh
+      script: ./third_test.sh
