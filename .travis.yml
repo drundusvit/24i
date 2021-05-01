@@ -5,12 +5,12 @@ jobs:
       script:
       - echo ${TRAVIS_COMMIT}
       - echo ${TRAVIS_BRANCH}
-      #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker login --username AWS -p ${AWS_PASS} 332220437127.dkr.ecr.eu-central-1.amazonaws.com/interviewtest
       - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT} .
       - docker images
     - stage: start docker
-      script: docker image
-      script: docker run -p 8081:8081 ${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
+    - script: docker image
+    - script: docker run -p 8081:8081 ${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
     - stage: test
       script: 
       - |
