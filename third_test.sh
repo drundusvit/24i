@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 echo "Third test"
 answer="$(curl  http://localhost:8081/about -s)"
 STR="+31 20 12345678"
