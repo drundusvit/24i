@@ -11,8 +11,8 @@ jobs:
       - docker push 332220437127.dkr.ecr.eu-central-1.amazonaws.com/interviewtest:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
       - docker images
     - stage: start docker
-    - script: docker image
-    - script: docker run -p 8081:8081 ${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
+    - script: docker images
+    - script: docker run -d -p 8081:8081 332220437127.dkr.ecr.eu-central-1.amazonaws.com/interviewtest:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
     - stage: test
     - script: 
       - |
