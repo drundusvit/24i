@@ -8,8 +8,9 @@ jobs:
       #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT} .
       - docker images
+    - stage: strart docker
+      script: docker run -p 8081:8081 ${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
     - stage: test
-      script: docker run -p 8081:8081 $TRAVIS_COMMIT
       script: 
       - |
         if [ $(curl -LI http://localhost:8081/about -o /dev/null -w '%{http_code}\n' -s) == "200" ]
