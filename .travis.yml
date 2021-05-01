@@ -3,13 +3,24 @@ jobs:
   include:
     - stage: build docker image
       script:
-      - echo ${TRAVIS_COMMIT[0..7]}
+      - echo ${TRAVIS_COMMIT}
       - echo ${TRAVIS_BRANCH}
       #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT[0..7]} .
+      - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT} .
       - docker images
     - stage: test
       script: docker run -p 8081:8081 $TRAVIS_COMMIT
       script: ./first_test.sh
       script: ./second_test.sh
       script: ./third_test.sh
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id:
+    secure: "${AWS_ACCESS_KEY}"
+  secret_access_key:
+    secure: "${AWS_SECRET_ACCESS_KEY}"
+  region: "eu-central-1"
+  app: "Damir"
+  env: "Damir-env"
+  bucket_name: "24i-build-artifact"
