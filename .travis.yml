@@ -8,7 +8,8 @@ jobs:
       #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT} .
       - docker images
-    - stage: strart docker
+    - stage: start docker
+      script: docker image
       script: docker run -p 8081:8081 ${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
     - stage: test
       script: 
@@ -23,12 +24,14 @@ jobs:
       # # script: ./third_test.sh
 
 deploy:
-  provider: elasticbeanstalk
-  access_key_id:
-    secure: "${AWS_ACCESS_KEY}"
-  secret_access_key:
-    secure: "${AWS_SECRET_ACCESS_KEY}"
-  region: "eu-central-1"
-  app: "Damir"
-  env: "Damir-env"
-  bucket_name: "24i-build-artifact"
+  - provider: elasticbeanstalk
+    access_key_id: "${AWS_ACCESS_KEY}"
+    secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
+    region: "eu-central-1"
+    app: "Damir"
+    env: "Damir-env"
+    bucket_name: "24i-build-artifact"
+  - provider: s3
+    access_key_id: "${AWS_ACCESS_KEY}"
+    secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
+    bucket: "24i-build-artifact"
