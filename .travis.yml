@@ -7,12 +7,14 @@ jobs:
       - echo ${TRAVIS_BRANCH}
       - docker login --username AWS -p ${AWS_PASS} 332220437127.dkr.ecr.eu-central-1.amazonaws.com/interviewtest
       - docker build -t ${TRAVIS_BRANCH}-${TRAVIS_COMMIT} .
+      - docker tag ${TRAVIS_BRANCH}-${TRAVIS_COMMIT} 332220437127.dkr.ecr.eu-central-1.amazonaws.com/interviewtest/${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
+      - docker push 332220437127.dkr.ecr.eu-central-1.amazonaws.com/interviewtest/${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
       - docker images
     - stage: start docker
     - script: docker image
     - script: docker run -p 8081:8081 ${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
     - stage: test
-      script: 
+    - script: 
       - |
         if [ $(curl -LI http://localhost:8081/about -o /dev/null -w '%{http_code}\n' -s) == "200" ]
         then 
@@ -20,8 +22,23 @@ jobs:
         else
           exit 1
         fi 
-      # script: ./second_test.sh
-      # # script: ./third_test.sh
+      - |
+        answer="$(curl  http://localhost:8081 -s)"
+        if [[ $answer == "Hello Damir" ]]
+        then 
+          exit 0
+        else
+          exit 1
+        fi
+      - |
+        answer="$(curl  http://localhost:8081/about -s)"
+        STR="+31 20 12345678"
+        if [[ "$answer" =~ .*"$STR" ]]
+        then 
+          exit 0
+        else
+          exit 1
+        fi 
 
 deploy:
   - provider: elasticbeanstalk
