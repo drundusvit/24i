@@ -3,9 +3,12 @@ jobs:
   include:
     - stage: build docker image
       script:
+      - echo TRAVIS_COMMIT
+      - echo env.TRAVIS_COMMIT
+      - echo ${TRAVIS_COMMIT}
       # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t $TRAVIS_COMMIT .
-      - docker images
-    - stage: test
-      script: docker run -p 8081:8081 $TRAVIS_COMMIT
-      script: curl localhost:8081
+      #- docker build -t TRAVIS_COMMIT .
+      #- docker images
+    # - stage: test
+    #   script: docker run -p 8081:8081 $TRAVIS_COMMIT
+    #   script: curl localhost:8081
